@@ -18,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="nova-venda" element={<NovaVenda />} />
           <Route path="relatorios" element={<Relatorios />} />
           <Route path="configuracoes" element={<Configuracoes />} />
+          <Route path="nova-checkout" element={<NovaVenda />} />
         </Route>
       </Routes>
     </BrowserRouter>
