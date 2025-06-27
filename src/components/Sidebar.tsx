@@ -1,21 +1,44 @@
-import { Link, useLocation } from 'react-router-dom'
-import { AiOutlineHome, AiOutlinePlusCircle, AiOutlineBarChart, AiOutlineSetting } from 'react-icons/ai'
+import { Link, useLocation } from 'react-router-dom';
+import {
+  AiOutlineHome,
+  AiOutlinePlusCircle,
+  AiOutlineBarChart,
+  AiOutlineSetting,
+} from 'react-icons/ai';
 
-const Sidebar = () => {
-  const location = useLocation()
+import logoDipraia from '../assets/logo-dipraia.svg';
+import logoHorizontal from '../assets/logo-horizontal.svg';
+
+type SidebarProps = {
+  retraida: boolean;
+};
+
+const Sidebar = ({ retraida }: SidebarProps) => {
+  const location = useLocation();
 
   const menus = [
     { name: 'Home', icon: <AiOutlineHome />, path: '/' },
     { name: 'Nova Venda', icon: <AiOutlinePlusCircle />, path: '/nova-venda' },
     { name: 'Relatórios', icon: <AiOutlineBarChart />, path: '/relatorios' },
-    { name: 'Configurações', icon: <AiOutlineSetting />, path: '/configuracoes' }
-  ]
+    { name: 'Configurações', icon: <AiOutlineSetting />, path: '/configuracoes' },
+  ];
 
   return (
-    <aside className="w-56 h-screen bg-white border-r flex flex-col p-4 shadow-md">
-      <h1 className="text-xl font-bold mb-6">Gestor de Vendas</h1>
+    <aside
+      className={`h-screen bg-white border-r shadow-md flex flex-col p-4 transition-all duration-300 ${
+        retraida ? 'w-16 items-center' : 'w-56'
+      }`}
+    >
+      <div className="mb-6 h-8 flex items-center justify-center">
+        {retraida ? (
+          <img src={logoDipraia} alt="Dipraia" className="w-10 h-10" />
+        ) : (
+          <img src={logoHorizontal} alt="Dipraia Horizontal" className="h-15 w-auto max-w-[140px]" />
+        )}
+      </div>
+
       <nav className="flex flex-col gap-4">
-        {menus.map(menu => (
+        {menus.map((menu) => (
           <Link
             key={menu.path}
             to={menu.path}
@@ -26,12 +49,12 @@ const Sidebar = () => {
             }`}
           >
             {menu.icon}
-            {menu.name}
+            {!retraida && menu.name}
           </Link>
         ))}
       </nav>
     </aside>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

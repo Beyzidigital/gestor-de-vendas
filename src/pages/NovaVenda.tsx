@@ -1,48 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { produtos } from "../data/produtos";
 import ProductCard from "../components/ProductCard";
 import VendaTopBar from "../components/VendaTopBar";
 import CategoriaTabs from "../components/CategoriaTabs";
+import { useCategorias } from "../hooks/useCategorias";
 
 const NovaVenda = () => {
   const [canal, setCanal] = useState("WhatsApp");
-  const [categoria, setCategoria] = useState("Caseiro");
   const [search, setSearch] = useState("");
 
-  const produtos = [
-    { nome: "Cenoura", categoria: "Caseiro" },
-    { nome: "Chocolate", categoria: "Caseiro" },
-    { nome: "Red Velvet", categoria: "Caseiro" },
-    { nome: "Laranja", categoria: "Caseiro" },
-    { nome: "Limão", categoria: "Caseiro" },
-    { nome: "Maracujá", categoria: "Caseiro" },
-    { nome: "Mesclado", categoria: "Caseiro" },
+  const { categorias, categoriaSelecionada, setCategoriaSelecionada } = useCategorias();
+  const [categoria, setCategoria] = useState(categoriaSelecionada);
 
-    { nome: "Cenoura", categoria: "Vulcão" },
-    { nome: "Chocolate", categoria: "Vulcão" },
-    { nome: "Red Velvet", categoria: "Vulcão" },
-    { nome: "Laranja", categoria: "Vulcão" },
-    { nome: "Limão", categoria: "Vulcão" },
-    { nome: "Maracujá", categoria: "Vulcão" },
-    { nome: "Mesclado", categoria: "Vulcão" },
+  // Atualiza a categoria local quando a selecionada mudar
+  useEffect(() => {
+    if (categoriaSelecionada) {
+      setCategoria(categoriaSelecionada);
+    }
+  }, [categoriaSelecionada]);
 
-    { nome: "Cenoura", categoria: "Mini" },
-    { nome: "Chocolate", categoria: "Mini" },
-    { nome: "Red Velvet", categoria: "Mini" },
-    { nome: "Laranja", categoria: "Mini" },
-    { nome: "Limão", categoria: "Mini" },
-    { nome: "Maracujá", categoria: "Mini" },
-    { nome: "Mesclado", categoria: "Mini" },
-  ];
-
-const produtosFiltrados = produtos.filter((p) =>
-  search
-    ? p.nome.toLowerCase().includes(search.toLowerCase())
-    : p.categoria === categoria
-);
+  // Aplica filtro por nome ou categoria
+  const produtosFiltrados = produtos.filter((p) =>
+    search
+      ? p.nome.toLowerCase().includes(search.toLowerCase())
+      : p.categoria === categoria
+  );
 
   return (
     <div className="p-4">
-      {/* Topo com seletor de canal e busca */}
+      {/* Topo com busca e canal de venda */}
       <VendaTopBar
         canal={canal}
         setCanal={setCanal}
@@ -50,20 +36,24 @@ const produtosFiltrados = produtos.filter((p) =>
         setBusca={setSearch}
       />
 
-      {/* Abas de categoria */}
-      <CategoriaTabs
-        categoria={categoria}
-        setCategoria={setCategoria}
-        categorias={["Caseiro", "Vulcão", "Mini", "Pote", "Naked"]}
-      />
+      {/* Abas de categorias se houverem categorias carregadas */}
+      {categorias.length > 0 && (
+        <CategoriaTabs
+          categoria={categoria}
+          setCategoria={setCategoria}
+          categorias={categorias}
+        />
+      )}
 
-      {/* Grid dos produtos filtrados */}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-        {produtosFiltrados.map((p) => (
-            <ProductCard
-            key={`${p.nome}-${p.categoria}`}
-            nome={`${p.categoria} de ${p.nome}`}
-            categoria={p.categoria as any}
+      {/* Grid com cards de produto */}
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {produtosFiltrados.map((produto) => (
+          <ProductCard
+            key={`${produto.nome}-${produto.categoria}`}
+            nome={produto.nome}
+            categoria={produto.categoria}
+            tamanhos={produto.tamanhos}
+            coberturas={produto.coberturas}
           />
         ))}
       </div>

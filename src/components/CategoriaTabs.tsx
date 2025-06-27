@@ -1,19 +1,27 @@
-export default function CategoriaTabs({ categoria, setCategoria, categorias }) {
+type CategoriaTabsProps = {
+  categoria: string;
+  setCategoria: (categoria: string) => void;
+  categorias: string[];
+};
+
+const CategoriaTabs = ({ categoria, setCategoria, categorias }: CategoriaTabsProps) => {
   return (
-    <div className="flex gap-2 mt-2">
+    <div className="flex flex-wrap gap-2">
       {categorias.map((cat) => (
         <button
           key={cat}
-          onClick={() => setCategoria(cat)}
-          className={`px-4 py-2 rounded-md text-sm font-medium ${
+          className={`px-4 py-2 rounded-full transition-all ${
             categoria === cat
-              ? "bg-[#FFAEBD] text-[#513625]"
-              : "bg-[#FFE0E6] text-[#513625]"
+              ? "bg-[#FFAEBD] text-white"
+              : "bg-white border border-gray-300 text-gray-700"
           }`}
+          onClick={() => setCategoria(cat)}
         >
           {cat}
         </button>
       ))}
     </div>
   );
-}
+};
+
+export default CategoriaTabs;

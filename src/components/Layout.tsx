@@ -1,15 +1,35 @@
-import Sidebar from './Sidebar'
-import { Outlet } from 'react-router-dom'
+import { useState } from 'react';
+import Sidebar from './Sidebar';
+import { Outlet } from 'react-router-dom';
+import SideCart from './SideCart';
 
 const Layout = () => {
-  return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <main className="flex-1 p-6 overflow-y-auto">
-        <Outlet />
-      </main>
-    </div>
-  )
-}
+  const [carrinhoAberto, setCarrinhoAberto] = useState(false);
 
-export default Layout
+  return (
+    <div className="flex h-screen overflow-hidden relative">
+      {/* Sidebar */}
+      <Sidebar retraida={carrinhoAberto} />
+
+      {/* Conteúdo principal */}
+      <main
+        className={`
+          flex-1 overflow-y-auto bg-[#F2F1F6] transition-all duration-300
+          ${carrinhoAberto ? 'mr-80' : ''}
+        `}
+      >
+        <div className="p-6">
+          <Outlet />
+        </div>
+      </main>
+
+      {/* Carrinho lateral */}
+      <SideCart
+        onAbrirCarrinho={() => setCarrinhoAberto(true)}
+        onFecharCarrinho={() => setCarrinhoAberto(false)}
+      />
+    </div>
+  );
+};
+
+export default Layout;
